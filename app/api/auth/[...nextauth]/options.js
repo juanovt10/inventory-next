@@ -1,4 +1,5 @@
 import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 
 export const options = {
   providers: [
@@ -25,7 +26,25 @@ export const options = {
       // variables to allow this to work -> add them in .env
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
-    })
+    }), 
+    GithubProvider({
+      profile(profile) {
+        console.log("Profile of github", profile);
+
+        // create a user
+        let userRole = "Github User";
+        // check if that user exisits and has an email, the user roles goes to admin
+        return {
+          // keep all the user
+          ...profile,
+          // allocate the user role to the session role
+          role: userRole,
+        }
+      }, 
+      // variables to allow this to work -> add them in .env
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET
+    }), 
   ],
 
   // custom callbacks -> adds the roles to the jwts
